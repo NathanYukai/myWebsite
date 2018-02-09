@@ -2,31 +2,49 @@
 <html>
 <head>
 <title>Page Title</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="magic.css">
+<link rel="stylesheet" href="http://icono-49d6.kxcdn.com/icono.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 
 <h1>Hi I'm Nathan</h1>
 <li> Programming languages I'm learning 
-	<ul> Typescript </ul>
-	<ul> Haskell </ul>
-	<ul> Scala </ul>
+	<ul>
+		Typescript 
+		<i class="icono-instagram"> </i> 
+	</ul> 
+	<ul> 
+		Haskell 
+		<i class="icono-image magic"> </i> 
+	</ul> 
+	<ul> 
+		Scala 
+		<i class="icono-gear"> </i>  
+	</ul> 
 </li>
-
-<p> 
-Things I'm interested in : 
-Video games,
-Cooking,
-Making games
-</p>
-
+<div class="contain">
+<div class="">
 <li> Favourite food
 	<ol> Eel on rice </ol>
 	<ol> chicken nugget </ol>
 	<ol> slow braised pork belly </ol>
 	<ol> Gyudon (Beef Bowl) </ol>
 </li>
+</div>
+</div>
 
+<a href="http://www.csszengarden.com/212/"> css zen garden example </a>
 
+<script >
+$('.magic').hover(function () {
+  $(this).addClass('magictime foolishOut');
+  setTimeout(function(){
+  	$('.magic').removeClass('magictime foolishOut');
+}, 1000);
+});
+</script>
 
 </body>
 </html> 
