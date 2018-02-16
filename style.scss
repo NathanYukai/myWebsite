@@ -9,19 +9,32 @@ h1 {
 .inlineBlock {
 	display: inline-block;
 	background-color: cadetblue;
+	// *{
+	// 	display: inline-block;
+	// }
 }
 
 .inlineFlex {
 	display: inline-flex;
 	background-color: cadetblue;
+	// *{
+	// 	display: inline-flex;
+	// }
 }
 
 .flex {
 	display: flex;
-	background-color: sandybrown
+	background-color: sandybrown;
+
+	// *{
+	// 	display: flex;
+	// }
 }
 
 .block {
 	display: block;
 	background-color: royalblue;
+	// *{
+	// 	display: block;
+	// }
 }
