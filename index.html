@@ -4,46 +4,87 @@
 <title>Page Title</title>
 <link rel="stylesheet" type="text/css" href="style.css">
 <link rel="stylesheet" type="text/css" href="magic.css">
-<link rel="stylesheet" href="http://icono-49d6.kxcdn.com/icono.min.css">
+<link rel="stylesheet" jtype="text/css" href="icono.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 
 <h1>Hi I'm Nathan</h1>
-<li> Programming languages I'm learning 
-	<ul>
+<ul class="languages"> Programming languages I'm learning 
+	<li>
 		Typescript 
 		<i class="icono-instagram"> </i> 
-	</ul> 
-	<ul> 
+	</li> 
+	<li> 
 		Haskell 
 		<i class="icono-image magic"> </i> 
-	</ul> 
-	<ul> 
+	</li> 
+	<li> 
 		Scala 
 		<i class="icono-gear"> </i>  
-	</ul> 
-</li>
-<div class="contain">
-<div class="">
-<li> Favourite food
-	<ol> Eel on rice </ol>
-	<ol> chicken nugget </ol>
-	<ol> slow braised pork belly </ol>
-	<ol> Gyudon (Beef Bowl) </ol>
-</li>
-</div>
+	</li> 
+</ul>
+
+<ul class="food"> Favourite food
+	<li> Eel on rice </li>
+	<li> chicken nugget </li>
+	<li> slow braised pork belly </li>
+	<li> Gyudon </li>
+</ul>
+
+<div id="foodClass">
+	food class: 
 </div>
 
-<a href="http://www.csszengarden.com/212/"> css zen garden example </a>
+<div id="languagesClass">
+	languages class: 
+</div>
 
 <script >
+
+var allClassNames = ["inlineBlock", "block", "flex", "inlineFlex"]
+
 $('.magic').hover(function () {
-  $(this).addClass('magictime foolishOut');
-  setTimeout(function(){
-  	$('.magic').removeClass('magictime foolishOut');
-}, 1000);
+  	$(this).addClass('magictime foolishOut');
+		setTimeout(function(){
+  		$('.magic').removeClass('magictime foolishOut');
+	}, 1000);
 });
+
+$('.food').click(function () {
+	var len = allClassNames.length;
+	var newClass = "inlineBlock";
+	for(var i = 0; i < len; i++){
+		if($(this).hasClass(allClassNames[i])){
+			$(this).removeClass(allClassNames[i]);
+			newClass = allClassNames[(i+1) % len]
+			break;
+		}
+	}
+
+	$(this).addClass(newClass)
+	$('#foodClass').text("food class: " + newClass)
+}
+)
+
+
+$('.languages').click(function () {
+	var len = allClassNames.length;
+	
+	var newClass = "inlineBlock";
+	for(var i = 0; i < len; i++){
+		if($(this).hasClass(allClassNames[i])){
+			$(this).removeClass(allClassNames[i]);
+			newClass = allClassNames[(i+1) % len]
+			break;
+		}
+	}
+
+	$(this).addClass(newClass)
+	$('#languagesClass').text("languages class: " + newClass)
+}
+)
+
 </script>
 
 </body>

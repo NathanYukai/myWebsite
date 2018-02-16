@@ -1,7 +1,23 @@
 h1 {
-	color: navy;
-}
+  color: navy; }
 
 .magic {
-	background-color: #333333
-}
+  background-color: #333333; }
+
+.inlineBlock {
+  display: inline-block;
+  background-color: cadetblue; }
+
+.inlineFlex {
+  display: inline-flex;
+  background-color: cadetblue; }
+
+.flex {
+  display: flex;
+  background-color: sandybrown; }
+
+.block {
+  display: block;
+  background-color: royalblue; }
+
+/*# sourceMappingURL=style.css.map */
