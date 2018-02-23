@@ -7,17 +7,25 @@ h1 {
 .inlineBlock {
   display: inline-block;
   background-color: cadetblue; }
+  .inlineBlock * {
+    display: inline-block; }
 
 .inlineFlex {
   display: inline-flex;
   background-color: cadetblue; }
+  .inlineFlex * {
+    display: inline-flex; }
 
 .flex {
   display: flex;
   background-color: sandybrown; }
+  .flex * {
+    display: flex; }
 
 .block {
   display: block;
   background-color: royalblue; }
+  .block * {
+    display: block; }
 
 /*# sourceMappingURL=style.css.map */
