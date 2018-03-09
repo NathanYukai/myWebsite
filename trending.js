@@ -46,6 +46,7 @@ function preLoad(){
 }
 
 function replaceOne(){
+    console.log(loadGifSrc)
     const inputBox = document.getElementById('inputBox');
     const searchTag = "&tag="+inputBox.value;
     const requestUrl = randomRequest+searchTag;
