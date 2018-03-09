@@ -28,4 +28,7 @@ h1 {
   .block * {
     display: block; }
 
+img.gif {
+  padding-right: 5px; }
+
 /*# sourceMappingURL=style.css.map */

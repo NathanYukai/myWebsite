@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="magic.css">
 <link rel="stylesheet" jtype="text/css" href="icono.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="./trending.js"></script>
 </head>
 <body>
 
@@ -35,7 +36,6 @@
 	<li> Gyudon </li>
 </ul>
 
-
 <div id="languagesClass">
 	languages class: 
 </div>
@@ -44,7 +44,12 @@
 	food class: 
 </div>
 
+<input type='text' id='inputBox' placeholder="Gif me something"/>
+<li id="gifList">
+</li>
 <script >
+preLoad();
+getGifs();
 
 var allClassNames = ["inlineBlock", "block", "flex", "inlineFlex"]
 
@@ -55,8 +60,12 @@ $('.magic').hover(function () {
 	}, 1000);
 });
 
-
-
+var frame = 0;
+var frameMax = 36;
+$('.food').hover(function(){
+	$('.food').addClass('rotate');
+	$('.rotate').trigger("rotatestart");
+})
 $('.food').click(function () {
 	var len = allClassNames.length;
 	var newClass = "inlineBlock";
