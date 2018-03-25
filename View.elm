@@ -20,7 +20,20 @@ view model =
 
 displayAllGif : List String -> List (Html Msg)
 displayAllGif urls =
-    List.map (\u -> img [ src u ] []) urls
+    let
+        idxs =
+            List.range 0 (List.length urls)
+    in
+    List.map2
+        (\u i ->
+            img
+                [ src u
+                , onClick (ChangeGif i)
+                ]
+                []
+        )
+        urls
+        idxs
 
 
 type alias Model =
@@ -29,10 +42,12 @@ type alias Model =
     , waitingUrl : String
     }
 
+
 type Msg
     = GetNewGif
     | ReceiveNewGif (Result Http.Error String)
     | ChangeTopic String
     | GetWaitingGif
     | ReceiveWaitingGif (Result Http.Error String)
-
+    | ChangeGif Int
+    | ReceiveChangeGif Int (Result Http.Error String)

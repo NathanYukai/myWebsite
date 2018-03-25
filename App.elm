@@ -13,47 +13,73 @@ init topic =
     )
 
 
+
 -- UPDATE
+
+
+replaceIdx : List a -> Int -> a -> List a
+replaceIdx lst idx e =
+    List.take idx lst ++ [ e ] ++ List.drop (idx + 1) lst
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
+    let
+        replacedWithWaiting i =
+            replaceIdx model.gifUrl i model.waitingUrl
+
+        replacedWithChanged i url =
+            replaceIdx model.gifUrl i url
+    in
     case msg of
         GetNewGif ->
-            ( { model | gifUrl = model.waitingUrl :: model.gifUrl }, getRandomGif model.topic )
+            ( { model | gifUrl = model.waitingUrl :: model.gifUrl }, getRandomGif model.topic ReceiveNewGif )
+
+        ChangeGif i ->
+            ( { model | gifUrl = replacedWithWaiting i }, getRandomGif model.topic (ReceiveChangeGif i) )
 
         GetWaitingGif ->
             ( model, getWaitingGif )
 
         ReceiveNewGif (Ok newUrl) ->
-            ( { model | gifUrl = addNewGifToList newUrl  model.gifUrl }, Cmd.none )
+            ( { model | gifUrl = addNewGifToList newUrl model.gifUrl }, Cmd.none )
 
-        ReceiveNewGif (Err _) ->
-            ( model, Cmd.none )
+        ReceiveChangeGif idx (Ok newUrl) ->
+            ( { model | gifUrl = replacedWithChanged idx newUrl }, Cmd.none )
 
         ReceiveWaitingGif (Ok newUrl) ->
             ( { model | waitingUrl = newUrl }, Cmd.none )
 
+        ReceiveNewGif (Err _) ->
+            ( model, Cmd.none )
+
         ReceiveWaitingGif (Err _) ->
+            ( model, Cmd.none )
+
+        ReceiveChangeGif idx (Err _) ->
             ( model, Cmd.none )
 
         ChangeTopic str ->
             ( { model | topic = str }, Cmd.none )
 
 
-getRandomGif : String -> Cmd Msg
-getRandomGif topic =
+getRandomGif : String -> (Result.Result Http.Error String -> Msg) -> Cmd Msg
+getRandomGif topic msg =
     let
         url =
             giphyUrl ++ "random?" ++ apiKey ++ "&tag=" ++ topic
     in
-    Http.send ReceiveNewGif (Http.get url decodeGifUrl)
+    Http.send msg (Http.get url decodeGifUrl)
+
 
 addNewGifToList : String -> List String -> List String
 addNewGifToList s lst =
     case lst of
-        [] -> []
-        (l :: rest) -> s :: rest
+        [] ->
+            []
+
+        l :: rest ->
+            s :: rest
 
 
 getWaitingGif : Cmd Msg
@@ -62,7 +88,8 @@ getWaitingGif =
         url =
             waitingUrl
     in
-        Http.send ReceiveWaitingGif (Http.get url decodeGifUrl)
+    Http.send ReceiveWaitingGif (Http.get url decodeGifUrl)
+
 
 giphyUrl : String
 giphyUrl =
@@ -81,7 +108,7 @@ waitingUrl =
 
 decodeGifUrl : Decode.Decoder String
 decodeGifUrl =
-    Decode.at [ "data", "image_url" ] Decode.string
+    Decode.at [ "data", "images", "fixed_height", "url" ] Decode.string
 
 
 
@@ -95,6 +122,7 @@ subscriptions model =
 
 
 -- MAIN
+
 
 main : Program Never Model Msg
 main =
