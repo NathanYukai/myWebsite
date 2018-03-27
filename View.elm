@@ -14,40 +14,46 @@ view model =
             , button [ onClick GetNewGif ] [ text "get new gif" ]
             , input [ onInput ChangeTopic ] []
             ]
-        , div [] (displayAllGif model.gifUrl)
+        , div [] (displayAllGif model.gifs)
         ]
 
 
-displayAllGif : List String -> List (Html Msg)
-displayAllGif urls =
+displayAllGif : List GIF -> List (Html Msg)
+displayAllGif gifs =
     let
         idxs =
-            List.range 0 (List.length urls)
+            List.range 0 (List.length gifs)
     in
     List.map2
         (\u i ->
             img
-                [ src u
+                [ src u.url
                 , onClick (ChangeGif i)
                 ]
                 []
         )
-        urls
+        gifs
         idxs
+
+
+type alias GIF =
+    { url : String
+    , topic : String
+    }
 
 
 type alias Model =
     { topic : String
-    , gifUrl : List String
+    , gifs : List GIF
     , waitingUrl : String
     }
 
 
 type Msg
     = GetNewGif
-    | ReceiveNewGif (Result Http.Error String)
+    | ReceiveNewGif String (Result Http.Error String)
     | ChangeTopic String
     | GetWaitingGif
     | ReceiveWaitingGif (Result Http.Error String)
     | ChangeGif Int
-    | ReceiveChangeGif Int (Result Http.Error String)
+    | ReceiveChangeGif Int String (Result Http.Error String)

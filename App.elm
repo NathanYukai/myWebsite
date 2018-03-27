@@ -26,37 +26,45 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
         replacedWithWaiting i =
-            replaceIdx model.gifUrl i model.waitingUrl
+            replaceIdx model.gifs i { url = model.waitingUrl, topic = "" }
 
         replacedWithChanged i url =
-            replaceIdx model.gifUrl i url
+            replaceIdx model.gifs i url
     in
     case msg of
         GetNewGif ->
-            ( { model | gifUrl = model.waitingUrl :: model.gifUrl }, getRandomGif model.topic ReceiveNewGif )
+            ( { model | gifs = { url = model.waitingUrl, topic = "" } :: model.gifs }
+            , getRandomGif model.topic (ReceiveNewGif model.topic)
+            )
 
         ChangeGif i ->
-            ( { model | gifUrl = replacedWithWaiting i }, getRandomGif model.topic (ReceiveChangeGif i) )
+            ( { model | gifs = replacedWithWaiting i }
+            , getRandomGif model.topic (ReceiveChangeGif i model.topic)
+            )
 
         GetWaitingGif ->
             ( model, getWaitingGif )
 
-        ReceiveNewGif (Ok newUrl) ->
-            ( { model | gifUrl = addNewGifToList newUrl model.gifUrl }, Cmd.none )
+        ReceiveNewGif tpc (Ok newUrl) ->
+            ( { model | gifs = addNewGifToList { url = newUrl, topic = tpc } model.gifs }
+            , Cmd.none
+            )
 
-        ReceiveChangeGif idx (Ok newUrl) ->
-            ( { model | gifUrl = replacedWithChanged idx newUrl }, Cmd.none )
+        ReceiveChangeGif idx tpc (Ok newUrl) ->
+            ( { model | gifs = replacedWithChanged idx { url = newUrl, topic = tpc } }
+            , Cmd.none
+            )
 
         ReceiveWaitingGif (Ok newUrl) ->
             ( { model | waitingUrl = newUrl }, Cmd.none )
 
-        ReceiveNewGif (Err _) ->
+        ReceiveNewGif _ (Err _) ->
             ( model, Cmd.none )
 
         ReceiveWaitingGif (Err _) ->
             ( model, Cmd.none )
 
-        ReceiveChangeGif idx (Err _) ->
+        ReceiveChangeGif _ _ (Err _) ->
             ( model, Cmd.none )
 
         ChangeTopic str ->
@@ -69,10 +77,10 @@ getRandomGif topic msg =
         url =
             giphyUrl ++ "random?" ++ apiKey ++ "&tag=" ++ topic
     in
-    Http.send msg (Http.get url decodeGifUrl)
+    Http.send msg (Http.get url decodeGifs)
 
 
-addNewGifToList : String -> List String -> List String
+addNewGifToList : a -> List a -> List a
 addNewGifToList s lst =
     case lst of
         [] ->
@@ -88,7 +96,7 @@ getWaitingGif =
         url =
             waitingUrl
     in
-    Http.send ReceiveWaitingGif (Http.get url decodeGifUrl)
+    Http.send ReceiveWaitingGif (Http.get url decodeGifs)
 
 
 giphyUrl : String
@@ -106,8 +114,8 @@ waitingUrl =
     giphyUrl ++ "random?" ++ apiKey ++ "&tag=" ++ "waiting"
 
 
-decodeGifUrl : Decode.Decoder String
-decodeGifUrl =
+decodeGifs : Decode.Decoder String
+decodeGifs =
     Decode.at [ "data", "images", "fixed_height", "url" ] Decode.string
 
 
