@@ -13,16 +13,25 @@ view model =
             [ h2 [] [ text model.topic ]
             , button [ onClick GetNewGif ] [ text "get new gif" ]
             , input [ onInput ChangeTopic ] []
+            , button [ onClick ToggleMerge ] []
             ]
-        , div [] (displayAllGif model.gifs)
+        , div [] (displayAllGif model)
         ]
 
 
-displayAllGif : List GIF -> List (Html Msg)
-displayAllGif gifs =
+displayAllGif : Model -> List (Html Msg)
+displayAllGif model =
     let
         idxs =
-            List.range 0 (List.length gifs)
+            List.range 0 (List.length model.gifs)
+
+        clickFunc i =
+            case model.inMerging of
+                True ->
+                    ToggleGifSelect i
+
+                False ->
+                    ChangeGif i
     in
     List.map2
         (\u i ->
@@ -32,13 +41,14 @@ displayAllGif gifs =
                 ]
                 []
         )
-        gifs
+        model.gifs
         idxs
 
 
 type alias GIF =
     { url : String
     , topic : String
+    , selected : Bool
     }
 
 
@@ -46,6 +56,7 @@ type alias Model =
     { topic : String
     , gifs : List GIF
     , waitingUrl : String
+    , inMerging : Bool
     }
 
 
@@ -57,3 +68,5 @@ type Msg
     | ReceiveWaitingGif (Result Http.Error String)
     | ChangeGif Int
     | ReceiveChangeGif Int String (Result Http.Error String)
+    | ToggleMerge
+    | ToggleGifSelect Int
