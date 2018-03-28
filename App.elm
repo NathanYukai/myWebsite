@@ -28,6 +28,20 @@ replaceIdx lst idx e =
         ++ List.drop (idx + 1) lst
 
 
+toggleGifSelected : List GIF -> Int -> List GIF
+toggleGifSelected lst idx =
+    let
+        g =
+            List.head (List.drop idx lst)
+    in
+    case g of
+        Nothing ->
+            lst
+
+        Just g ->
+            replaceIdx lst idx { g | selected = not g.selected }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
@@ -106,9 +120,10 @@ update msg model =
             ( { model | topic = str }, Cmd.none )
 
         ToggleMerge ->
-            ( model, Cmd.none )
+            ( { model | inMerging = not model.inMerging }, Cmd.none )
 
         ToggleGifSelect idx ->
+            ( { model | gifs = toggleGifSelected model.gifs idx }, Cmd.none )
 
 
 getRandomGif : String -> (Result.Result Http.Error String -> Msg) -> Cmd Msg

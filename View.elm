@@ -37,7 +37,7 @@ displayAllGif model =
         (\u i ->
             img
                 [ src u.url
-                , onClick (ChangeGif i)
+                , onClick (clickFunc i)
                 ]
                 []
         )
