@@ -55,6 +55,17 @@ update msg model =
 
         replacedWithChanged i url =
             replaceIdx model.gifs i url
+
+        ( performMerge, mergedModel ) =
+            mergeGifs model
+
+        mergeCmd =
+            case performMerge of
+                True ->
+                    getRandomGif mergedModel.topic (ReceiveNewGif mergedModel.topic)
+
+                False ->
+                    Cmd.none
     in
     case msg of
         GetNewGif ->
@@ -120,10 +131,57 @@ update msg model =
             ( { model | topic = str }, Cmd.none )
 
         ToggleMerge ->
-            ( { model | inMerging = not model.inMerging }, Cmd.none )
+            ( mergedModel, mergeCmd )
 
         ToggleGifSelect idx ->
             ( { model | gifs = toggleGifSelected model.gifs idx }, Cmd.none )
+
+
+mergeGifs : Model -> ( Bool, Model )
+mergeGifs model =
+    let
+        ( tpc, mergedList ) =
+            mergeGifList_ model.gifs
+
+        perform =
+            tpc /= ""
+
+        ( newTopic, newLst ) =
+            case perform of
+                True ->
+                    ( tpc
+                    , { url = model.waitingUrl
+                      , topic = ""
+                      , selected = False
+                      }
+                        :: mergedList
+                    )
+
+                False ->
+                    ( model.topic, model.gifs )
+    in
+    ( perform
+    , { model
+        | inMerging = not model.inMerging
+        , gifs = newLst
+        , topic = newTopic
+      }
+    )
+
+
+mergeGifList_ : List GIF -> ( String, List GIF )
+mergeGifList_ lst =
+    List.foldr
+        (\g ( t, l ) ->
+            case g.selected of
+                True ->
+                    ( t ++ " " ++ g.topic, l )
+
+                False ->
+                    ( t, g :: l )
+        )
+        ( "", [] )
+        lst
 
 
 getRandomGif : String -> (Result.Result Http.Error String -> Msg) -> Cmd Msg

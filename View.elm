@@ -13,10 +13,20 @@ view model =
             [ h2 [] [ text model.topic ]
             , button [ onClick GetNewGif ] [ text "get new gif" ]
             , input [ onInput ChangeTopic ] []
-            , button [ onClick ToggleMerge ] []
+            , button [ onClick ToggleMerge ] [ text (toggleButtonMsg model) ]
             ]
         , div [] (displayAllGif model)
         ]
+
+
+toggleButtonMsg : Model -> String
+toggleButtonMsg model =
+    case model.inMerging of
+        True ->
+            "merge them!"
+
+        False ->
+            "merge mode"
 
 
 displayAllGif : Model -> List (Html Msg)
