@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" type="text/css" href="magic.css">
+<link rel="stylesheet" jtype="text/css" href="icono.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="./trending.js"></script>
+</head>
+<body>
+
+<h1>Hi I'm Nathan</h1>
+
+<h2> click on the list! </h2>
+
+<ul class="languages"> Programming languages I'm learning 
+	<li>
+		Typescript 
+		<i class="icono-instagram"> </i> 
+	</li> 
+	<li> 
+		Haskell 
+		<i class="icono-image magic"> </i> 
+	</li> 
+	<li> 
+		Scala 
+		<i class="icono-gear"> </i>  
+	</li> 
+</ul>
+
+<ul class="food"> Favourite food
+	<li> Eel on rice </li>
+	<li> chicken nugget </li>
+	<li> slow braised pork belly </li>
+	<li> Gyudon </li>
+</ul>
+
+<div id="languagesClass">
+	languages class: 
+</div>
+
+<div id="foodClass">
+	food class: 
+</div>
+
+<br/>
+<input type='text' id='inputBox' placeholder="Gif me something"/>
+Click on a gif to update it based on the search box
+<ul id="gifList">
+</ul>
+<script >
+preLoad();
+getGifs();
+
+var allClassNames = ["inlineBlock", "block", "flex", "inlineFlex"]
+
+$('.magic').hover(function () {
+  	$(this).addClass('magictime foolishOut');
+		setTimeout(function(){
+  		$('.magic').removeClass('magictime foolishOut');
+	}, 1000);
+});
+
+var frame = 0;
+var frameMax = 36;
+$('.food').hover(function(){
+	$('.food').addClass('rotate');
+	$('.rotate').trigger("rotatestart");
+})
+$('.food').click(function () {
+	var len = allClassNames.length;
+	var newClass = "inlineBlock";
+	for(var i = 0; i < len; i++){
+		if($(this).hasClass(allClassNames[i])){
+			$(this).removeClass(allClassNames[i]);
+			newClass = allClassNames[(i+1) % len]
+			break;
+		}
+	}
+
+	$(this).addClass(newClass)
+	$('#foodClass').text("food class: " + newClass)
+}
+)
+
+
+$('.languages').click(function () {
+	var len = allClassNames.length;
+	
+	var newClass = "inlineBlock";
+	for(var i = 0; i < len; i++){
+		if($(this).hasClass(allClassNames[i])){
+			$(this).removeClass(allClassNames[i]);
+			newClass = allClassNames[(i+1) % len]
+			break;
+		}
+	}
+
+	$(this).addClass(newClass)
+	$('#languagesClass').text("languages class: " + newClass)
+}
+)
+
+</script>
+
+</body>
+</html> 
