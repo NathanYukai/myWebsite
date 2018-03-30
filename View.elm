@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
+import Style exposing (..)
 
 
 view : Model -> Html Msg
@@ -45,11 +46,14 @@ displayAllGif model =
     in
     List.map2
         (\u i ->
-            img
-                [ src u.url
-                , onClick (clickFunc i)
+            div [ style [ display inlineBlock ] ]
+                [ img
+                    [ src u.url
+                    , onClick (clickFunc i)
+                    ]
+                    []
+                , div [] [ text u.topic ]
                 ]
-                []
         )
         model.gifs
         idxs
